@@ -13,6 +13,9 @@ async function queryVotes() {
   const query = {
     tag: "",
     limit: 1,
+    start_author: "steempress",
+    start_permlink:
+      "guest-accounts-design-improvementsm-and-new-dashboard-for-user-settings",
     truncate_body: 1
   };
   const test = await client.database
@@ -20,8 +23,8 @@ async function queryVotes() {
     .then(result => {
       let array = [];
       result.forEach(post => {
-        // console.log("post", post.active_votes[0]);
-        if (post.active_votes[0].voter === "enlil") console.log("yay");
+        // console.log("post", post);
+        //   if (post.active_votes[0].voter === "enlil") console.log("yay");
         array.push(post.active_votes[0]);
       });
       return array;
@@ -63,33 +66,30 @@ const user = ["Anna", "Mak"];
 http
   .createServer((req, res) => {
     res.writeHead(200, { "Content-Type": "application/json" });
-    switch (req.url) {
-      case "/":
-        queryVotes().then(tekst => {
-          console.log(tekst[0].voter);
-        });
 
-        const end = JSON.stringify({ block: true });
-        res.end(end);
-        break;
-      case "/api/post":
-        let arr = [];
-        let test = -1;
-        let temp = -1;
+    queryVotes().then(answer => {
+      // console.log(answer[0].voter);
+    });
+    console.log(req.url);
+    const end = JSON.stringify({ block: true });
+    res.end(end);
 
-        posts.map(post => {
-          for (let j = 0; j < post.UserVoted.length; j++) {
-            for (let i = 0; i < user.length; i++) {
-              test = post.UserVoted[j].name.indexOf(user[i]);
-              if (test > -1) temp = test;
-            }
-            if (temp === -1) arr.push(post);
-          }
-        });
-        const JSONposts = JSON.stringify(arr);
-        res.end(JSONposts);
-        break;
-    }
-    res.end("test");
+    //     let arr = [];
+    //     let test = -1;
+    //     let temp = -1;
+
+    //     posts.map(post => {
+    //       for (let j = 0; j < post.UserVoted.length; j++) {
+    //         for (let i = 0; i < user.length; i++) {
+    //           test = post.UserVoted[j].name.indexOf(user[i]);
+    //           if (test > -1) temp = test;
+    //         }
+    //         if (temp === -1) arr.push(post);
+    //       }
+    //     });
+    //     const JSONposts = JSON.stringify(arr);
+    //     res.end(JSONposts);
+
+    // res.end("test");
   })
   .listen(port, "127.0.0.1");
