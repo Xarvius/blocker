@@ -9,74 +9,64 @@ opts.chainId =
   "0000000000000000000000000000000000000000000000000000000000000000";
 //connect to server which is connected to the network/production
 const client = new dsteem.Client("https://api.steemit.com");
-async function queryVotes(permalink, author) {
+function queryVotes(permalink, author) {
   const query = {
     tag: "",
     limit: 1,
-    // start_author: "dtube",
-    // start_permlink: "0lqfg03hrta",
     start_author: author,
     start_permlink: permalink,
     truncate_body: 1
   };
-  return await client.database
+  return client.database
     .getDiscussions("trending", query)
-    .then(result => {
-      let array = [];
-      result.forEach(post => {
-        // console.log("post", post);
-        array.push(post.active_votes);
-      });
-      return array;
-    })
+
     .catch(err => {
       console.log(err);
       alert("Error occured, please reload the page");
     });
 }
-const posts = [
-  {
-    id: 1,
-    title: "First",
-    content: "Lorem Ipsum1",
-    UserVoted: [{ id: 1, name: "Steve" }]
-  },
-  {
-    id: 2,
-    title: "Snd",
-    content: "Lorem Ipsum2",
-    UserVoted: [{ id: 1, name: "Anna" }]
-  },
-  {
-    id: 3,
-    title: "3",
-    content: "Lorem Ipsum3",
-    UserVoted: [{ id: 1, name: "Anna" }, { id: 2, name: "Marianne" }]
-  },
-  {
-    id: 4,
-    title: "4",
-    content: "Lorem Ipsum4",
-    UserVoted: [{ id: 1, name: "Mak" }]
-  }
-];
-const user = ["Anna", "Mak"];
 
 http
   .createServer((req, res) => {
     let reqUrl;
-    if (req.url != "/favicon.ico") reqUrl = req.url.split("/").reverse();
-    reqUrl &&
-      queryVotes(reqUrl[0], reqUrl[2]).then(answer => {
-        console.log(answer[0][1]);
+    if (req.url != "/favicon.ico") reqUrl = req.url.split("/").reverse(); //split url
+    reqUrl && // prevent favico
+      queryVotes(reqUrl[0], reqUrl[2]).then(data => {
+        console.log(data[0].active_votes); // voters list
       });
-    queryVotes();
     res.writeHead(200, { "Content-Type": "application/json" });
-
     const end = JSON.stringify({ block: true });
     res.end(end);
   })
   .listen(port, "127.0.0.1");
+
+// const posts = [
+//   {
+//     id: 1,
+//     title: "First",
+//     content: "Lorem Ipsum1",
+//     UserVoted: [{ id: 1, name: "Steve" }]
+//   },
+//   {
+//     id: 2,
+//     title: "Snd",
+//     content: "Lorem Ipsum2",
+//     UserVoted: [{ id: 1, name: "Anna" }]
+//   },
+//   {
+//     id: 3,
+//     title: "3",
+//     content: "Lorem Ipsum3",
+//     UserVoted: [{ id: 1, name: "Anna" }, { id: 2, name: "Marianne" }]
+//   },
+//   {
+//     id: 4,
+//     title: "4",
+//     content: "Lorem Ipsum4",
+//     UserVoted: [{ id: 1, name: "Mak" }]
+//   }
+// ];
+// const user = ["Anna", "Mak"];
 //     let arr = [];
 //     let test = -1;
 //     let temp = -1;
