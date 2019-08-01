@@ -1,5 +1,37 @@
 const http = require("http");
 const port = process.env.PORT || 3000;
+const dsteem = require("dsteem");
+let opts = {};
+
+//connect to production server
+opts.addressPrefix = "STM";
+opts.chainId =
+  "0000000000000000000000000000000000000000000000000000000000000000";
+//connect to server which is connected to the network/production
+const client = new dsteem.Client("https://api.steemit.com");
+async function queryVotes() {
+  const query = {
+    tag: "",
+    limit: 1,
+    truncate_body: 1
+  };
+  const test = await client.database
+    .getDiscussions("trending", query)
+    .then(result => {
+      let array = [];
+      result.forEach(post => {
+        // console.log("post", post.active_votes[0]);
+        if (post.active_votes[0].voter === "enlil") console.log("yay");
+        array.push(post.active_votes[0]);
+      });
+      return array;
+    })
+    .catch(err => {
+      console.log(err);
+      alert("Error occured, please reload the page");
+    });
+  return test;
+}
 const posts = [
   {
     id: 1,
@@ -17,7 +49,7 @@ const posts = [
     id: 3,
     title: "3",
     content: "Lorem Ipsum3",
-    UserVoted: [{ id: 1, name: "Marianne" }, { id: 2, name: "Anna" }]
+    UserVoted: [{ id: 1, name: "Anna" }, { id: 2, name: "Marianne" }]
   },
   {
     id: 4,
@@ -27,12 +59,18 @@ const posts = [
   }
 ];
 const user = ["Anna", "Mak"];
+
 http
   .createServer((req, res) => {
-    res.writeHead(200, { "Content-Type": "text/html" });
+    res.writeHead(200, { "Content-Type": "application/json" });
     switch (req.url) {
       case "/":
-        res.end("go /api/post");
+        queryVotes().then(tekst => {
+          console.log(tekst[0].voter);
+        });
+
+        const end = JSON.stringify({ block: true });
+        res.end(end);
         break;
       case "/api/post":
         let arr = [];
