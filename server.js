@@ -13,6 +13,8 @@ async function queryVotes() {
   const query = {
     tag: "",
     limit: 1,
+    // start_author: "dtube",
+    // start_permlink: "0lqfg03hrta",
     start_author: "steempress",
     start_permlink:
       "guest-accounts-design-improvementsm-and-new-dashboard-for-user-settings",
@@ -65,31 +67,30 @@ const user = ["Anna", "Mak"];
 
 http
   .createServer((req, res) => {
-    res.writeHead(200, { "Content-Type": "application/json" });
+    let reqUrl;
+    if (req.url != "/favicon.ico") reqUrl = req.url.split("/").reverse();
+    reqUrl && console.log(reqUrl);
 
+    res.writeHead(200, { "Content-Type": "application/json" });
     queryVotes().then(answer => {
       // console.log(answer[0].voter);
     });
-    console.log(req.url);
     const end = JSON.stringify({ block: true });
     res.end(end);
-
-    //     let arr = [];
-    //     let test = -1;
-    //     let temp = -1;
-
-    //     posts.map(post => {
-    //       for (let j = 0; j < post.UserVoted.length; j++) {
-    //         for (let i = 0; i < user.length; i++) {
-    //           test = post.UserVoted[j].name.indexOf(user[i]);
-    //           if (test > -1) temp = test;
-    //         }
-    //         if (temp === -1) arr.push(post);
-    //       }
-    //     });
-    //     const JSONposts = JSON.stringify(arr);
-    //     res.end(JSONposts);
-
-    // res.end("test");
   })
   .listen(port, "127.0.0.1");
+//     let arr = [];
+//     let test = -1;
+//     let temp = -1;
+
+//     posts.map(post => {
+//       for (let j = 0; j < post.UserVoted.length; j++) {
+//         for (let i = 0; i < user.length; i++) {
+//           test = post.UserVoted[j].name.indexOf(user[i]);
+//           if (test > -1) temp = test;
+//         }
+//         if (temp === -1) arr.push(post);
+//       }
+//     });
+//     const JSONposts = JSON.stringify(arr);
+//     res.end(JSONposts);
