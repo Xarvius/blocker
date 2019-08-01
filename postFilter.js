@@ -2,11 +2,10 @@ chrome.runtime.onMessage.addListener(gotMessage);
 function gotMessage(message, sender, sendresponse) {
   console.log(message.txt);
   let posts = document.querySelectorAll("div.articles__summary");
-  let post = document.querySelectorAll("h2.articles__h2 a");
-  test = link => {
-    let block;
+  let postLink = document.querySelectorAll("h2.articles__h2 a");
+  let filterRespond;
+  filterAsk = link => {
     const API = `https://g40zr.mocklab.io/blockFilter/${link}`;
-    console.log("link " + API);
     fetch(API)
       .then(response => {
         if (response.status === 200) return response;
@@ -14,21 +13,20 @@ function gotMessage(message, sender, sendresponse) {
       })
       .then(response => response.text())
       .then(data => {
-        block = JSON.parse(data.block);
-        console.log(block.block);
+        filterRespond = JSON.parse(data);
+        return filterRespond.block;
       })
       .catch(error =>
         error == "Error: 404"
-          ? alert("Not found")
-          : alert("Please try later " + error)
+          ? console.log("Not found")
+          : console.log("Please try later " + error)
       );
   };
-  console.log(post[1].href);
-  console.log(test(post[1].href));
   let i = 0;
-  // for (post of posts) {
-  //   if (i % 2 == 0) post.style["display"] = "none";
-  //   console.log(post);
-  //   i++;
-  // }
+  for (post of posts) {
+    // if (i % 2 == 0) pos.style["display"] = "none";
+    filterAsk(postLink[i].href);
+    if (filterRespond.block) post.style["display"] = "none";
+    i++;
+  }
 }
