@@ -69,12 +69,12 @@ http
   .createServer((req, res) => {
     let reqUrl;
     if (req.url != "/favicon.ico") reqUrl = req.url.split("/").reverse();
-    reqUrl && console.log(reqUrl);
-
+    reqUrl &&
+      queryVotes().then(answer => {
+        console.log(answer[0].voter);
+      });
     res.writeHead(200, { "Content-Type": "application/json" });
-    queryVotes().then(answer => {
-      // console.log(answer[0].voter);
-    });
+
     const end = JSON.stringify({ block: true });
     res.end(end);
   })
