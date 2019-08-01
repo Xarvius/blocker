@@ -9,25 +9,23 @@ opts.chainId =
   "0000000000000000000000000000000000000000000000000000000000000000";
 //connect to server which is connected to the network/production
 const client = new dsteem.Client("https://api.steemit.com");
-async function queryVotes() {
+async function queryVotes(permalink, author) {
   const query = {
     tag: "",
     limit: 1,
     // start_author: "dtube",
     // start_permlink: "0lqfg03hrta",
-    start_author: "steempress",
-    start_permlink:
-      "guest-accounts-design-improvementsm-and-new-dashboard-for-user-settings",
+    start_author: author,
+    start_permlink: permalink,
     truncate_body: 1
   };
-  const test = await client.database
+  return await client.database
     .getDiscussions("trending", query)
     .then(result => {
       let array = [];
       result.forEach(post => {
         // console.log("post", post);
-        //   if (post.active_votes[0].voter === "enlil") console.log("yay");
-        array.push(post.active_votes[0]);
+        array.push(post.active_votes);
       });
       return array;
     })
@@ -35,7 +33,6 @@ async function queryVotes() {
       console.log(err);
       alert("Error occured, please reload the page");
     });
-  return test;
 }
 const posts = [
   {
@@ -70,9 +67,10 @@ http
     let reqUrl;
     if (req.url != "/favicon.ico") reqUrl = req.url.split("/").reverse();
     reqUrl &&
-      queryVotes().then(answer => {
-        console.log(answer[0].voter);
+      queryVotes(reqUrl[0], reqUrl[2]).then(answer => {
+        console.log(answer[0][1]);
       });
+    queryVotes();
     res.writeHead(200, { "Content-Type": "application/json" });
 
     const end = JSON.stringify({ block: true });
