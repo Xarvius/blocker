@@ -4,13 +4,13 @@
   "description": "Filter by vote.",
   "version": "1",
   "author": "Xrv",
-  "background": {
-    "scripts": ["background.js"],
-    "persistent": false
-  },
   "browser_action": {},
+  "background": {
+    "scripts": ["background.js"]
+  },
   "content_scripts": [
     {
+      "matches": ["https://steemit.com/"],
       "js": ["postFilter.js"]
     }
   ]
