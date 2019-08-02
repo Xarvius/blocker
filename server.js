@@ -17,25 +17,37 @@ async function queryVotes(permalink, author) {
     start_permlink: permalink,
     truncate_body: 1
   };
-  let data = await client.database.getDiscussions("trending", query);
+  let data = await client.database
+    .getDiscussions("trending", query)
+    .catch(err => {
+      console.log(err);
+      alert("Error occured, please reload the page");
+    });
   return data;
 }
 
 http
   .createServer(async (req, res) => {
-    res.writeHead(200, { "Content-Type": "application/json" });
     let reqUrl;
     let end;
-    if (req.url != "/favicon.ico") reqUrl = req.url.split("/").reverse(); //split url
+    if (req.url != "/favicon.ico") {
+      reqUrl = req.url.split("/").reverse();
+      reqUrl[1] = reqUrl[1].substr(1);
+    }
+    console.log("url " + reqUrl);
     let data;
     // reqUrl && (data = queryVotes(reqUrl[0], reqUrl[2])); // prevent favico
     // console.log(data); // <--------------------- PROMISE
+    //https://steemit.com/steem/@steem.marketing/steemhunt-and-reviewhunt-interview-with-founder-young-hwi
     if (reqUrl) {
-      data = await queryVotes(reqUrl[0], reqUrl[2]);
+      data = await queryVotes(reqUrl[0], reqUrl[1]);
       console.log(data[0].active_votes[0].voter);
       data[0].active_votes[0].voter === "enlil"
         ? (end = JSON.stringify({ block: true }))
         : (end = JSON.stringify({ block: false }));
+      res.writeHead(200, { "Content-Type": "application/json" });
+    } else {
+      res.writeHead(404, { "Content-Type": "application/json" });
     }
 
     res.end(end);

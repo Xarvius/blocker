@@ -6,7 +6,9 @@ function gotMessage(message, sender, sendresponse) {
   let filterRespond;
 
   filterAsk = (link, post) => {
-    const API = `https://cors-anywhere.herokuapp.com/https://g40zr.mocklab.io/blockFilter/${link}`;
+    //const API = `https://cors-anywhere.herokuapp.com/https://g40zr.mocklab.io/blockFilter/${link}`;
+    //const API = `https://cors-anywhere.herokuapp.com/http://localhost:3000/${link}`;
+    const API = `http://localhost:3000/${link}`;
     fetch(API, { mode: "cors" })
       .then(response => {
         if (response.status === 200) return response;
@@ -23,7 +25,8 @@ function gotMessage(message, sender, sendresponse) {
   };
   let i = 0;
   for (post of posts) {
-    filterAsk(postLink[i].href, post);
+    let res = filterAsk(postLink[i].href, post);
+    res && console.log("yuh");
     i++;
   }
 }
