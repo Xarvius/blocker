@@ -29,7 +29,10 @@ const user = ["bue", "nate-atkins"];
 http
   .createServer(async (req, res) => {
     let reqUrl;
-
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Request-Method", "*");
+    res.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET");
+    res.setHeader("Access-Control-Allow-Headers", "*");
     if (req.url != "/favicon.ico") {
       reqUrl = req.url.split("/").reverse();
       reqUrl[1] = reqUrl[1].substr(1);
