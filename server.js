@@ -1,13 +1,6 @@
 const http = require("http");
 const port = process.env.PORT || 3000;
 const dsteem = require("dsteem");
-let opts = {};
-const users = ["bue", "nate-atkins"];
-//connect to production server
-opts.addressPrefix = "STM";
-opts.chainId =
-  "0000000000000000000000000000000000000000000000000000000000000000";
-//connect to server which is connected to the network/production
 const client = new dsteem.Client("https://api.steemit.com");
 async function queryVotes(permlink, author) {
   const query = {
