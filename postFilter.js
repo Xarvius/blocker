@@ -6,8 +6,6 @@ function gotMessage(message, sender, sendresponse) {
   let filterRespond;
 
   filterAsk = (link, post) => {
-    //const API = `https://cors-anywhere.herokuapp.com/https://g40zr.mocklab.io/blockFilter/${link}`;
-    // const API = `https://cors-anywhere.herokuapp.com/http://192.168.5.13000/${link}`;
     const API = `http://localhost:3000/${link}`;
     fetch(API, { mode: "cors" })
       .then(response => {
