@@ -17,21 +17,27 @@ async function queryVotes(permalink, author) {
     start_permlink: permalink,
     truncate_body: 1
   };
-
   let data = await client.database.getDiscussions("trending", query);
   return data;
 }
 
 http
-  .createServer((req, res) => {
+  .createServer(async (req, res) => {
+    res.writeHead(200, { "Content-Type": "application/json" });
     let reqUrl;
+    let end;
     if (req.url != "/favicon.ico") reqUrl = req.url.split("/").reverse(); //split url
     let data;
-    reqUrl && (data = queryVotes(reqUrl[0], reqUrl[2])); // prevent favico
+    // reqUrl && (data = queryVotes(reqUrl[0], reqUrl[2])); // prevent favico
+    // console.log(data); // <--------------------- PROMISE
+    if (reqUrl) {
+      data = await queryVotes(reqUrl[0], reqUrl[2]);
+      console.log(data[0].active_votes[0].voter);
+      data[0].active_votes[0].voter === "enlil"
+        ? (end = JSON.stringify({ block: true }))
+        : (end = JSON.stringify({ block: false }));
+    }
 
-    console.log(data); // <--------------------- PROMISE
-    res.writeHead(200, { "Content-Type": "application/json" });
-    const end = JSON.stringify({ block: true });
     res.end(end);
   })
   .listen(port, "127.0.0.1");
