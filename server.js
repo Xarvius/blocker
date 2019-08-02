@@ -25,26 +25,39 @@ async function queryVotes(permalink, author) {
     });
   return data;
 }
-
+const user = ["bue", "nate-atkins"];
 http
   .createServer(async (req, res) => {
     let reqUrl;
-    let end;
+
     if (req.url != "/favicon.ico") {
       reqUrl = req.url.split("/").reverse();
       reqUrl[1] = reqUrl[1].substr(1);
     }
-    console.log("url " + reqUrl);
+
     let data;
-    // reqUrl && (data = queryVotes(reqUrl[0], reqUrl[2])); // prevent favico
-    // console.log(data); // <--------------------- PROMISE
-    //https://steemit.com/steem/@steem.marketing/steemhunt-and-reviewhunt-interview-with-founder-young-hwi
+    let end = JSON.stringify({ block: false });
     if (reqUrl) {
       data = await queryVotes(reqUrl[0], reqUrl[1]);
-      console.log(data[0].active_votes[0].voter);
-      data[0].active_votes[0].voter === "enlil"
-        ? (end = JSON.stringify({ block: true }))
-        : (end = JSON.stringify({ block: false }));
+      let test = -1;
+      let temp = -1;
+      for (let j = 0; j < data[0].active_votes.length; j++) {
+        for (let i = 0; i < user.length; i++) {
+          test = data[0].active_votes[j].voter.indexOf(user[i]);
+          if (test > -1) {
+            temp = test;
+            break;
+          }
+        }
+        if (temp !== -1) {
+          end = JSON.stringify({ block: true });
+          break;
+        }
+      }
+
+      //console.log(data[0].active_votes[0].voter);
+      console.log(end);
+
       res.writeHead(200, { "Content-Type": "application/json" });
     } else {
       res.writeHead(404, { "Content-Type": "application/json" });
@@ -80,7 +93,7 @@ http
 //     UserVoted: [{ id: 1, name: "Mak" }]
 //   }
 // ];
-// const user = ["Anna", "Mak"];
+// const user = ["bue", "nate-atkins"];
 //     let arr = [];
 //     let test = -1;
 //     let temp = -1;
@@ -103,3 +116,9 @@ http
 //     console.log(err);
 //     alert("Error occured, please reload the page");
 //   });
+// reqUrl && (data = queryVotes(reqUrl[0], reqUrl[2])); // prevent favico
+// console.log(data); // <--------------------- PROMISE
+//https://steemit.com/steem/@steem.marketing/steemhunt-and-reviewhunt-interview-with-founder-young-hwi
+// data[0].active_votes[0].voter === "enlil"
+//   ? (end = JSON.stringify({ block: true }))
+//   : (end = JSON.stringify({ block: false })); //^3 quick check
