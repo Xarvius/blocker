@@ -1,8 +1,6 @@
 chrome.runtime.onMessage.addListener(gotMessage);
 function gotMessage(message) {
   console.log(message.txt);
-  let posts = document.querySelectorAll("div.articles__summary");
-  let postLink = document.querySelectorAll("h2.articles__h2 a");
 
   filterAsk = (link, post) => {
     const API = `http://localhost:3000/${link}`;
@@ -21,6 +19,8 @@ function gotMessage(message) {
         error == "Error: 404" ? console.log("Not found") : console.log(error)
       );
   };
+  let posts = document.querySelectorAll("div.articles__summary");
+  let postLink = document.querySelectorAll("h2.articles__h2 a");
   let i = 0;
   for (post of posts) {
     filterAsk(postLink[i].href, post);
