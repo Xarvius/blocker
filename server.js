@@ -21,7 +21,6 @@ async function queryVotes(permalink, author) {
     .getDiscussions("trending", query)
     .catch(err => {
       console.log(err);
-      alert("Error occured, please reload the page");
     });
   return data;
 }
@@ -57,12 +56,8 @@ http
           break;
         }
       }
-      console.log(end);
       res.writeHead(200, { "Content-Type": "application/json" });
-    } else {
-      res.writeHead(404, { "Content-Type": "application/json" });
     }
-
     res.end(end);
   })
   .listen(port, "127.0.0.1");
