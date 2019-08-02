@@ -1,9 +1,8 @@
 chrome.runtime.onMessage.addListener(gotMessage);
-function gotMessage(message, sender, sendresponse) {
+function gotMessage(message) {
   console.log(message.txt);
   let posts = document.querySelectorAll("div.articles__summary");
   let postLink = document.querySelectorAll("h2.articles__h2 a");
-  let filterRespond;
 
   filterAsk = (link, post) => {
     const API = `http://localhost:3000/${link}`;
@@ -14,6 +13,7 @@ function gotMessage(message, sender, sendresponse) {
       })
       .then(response => response.text())
       .then(data => {
+        let filterRespond;
         filterRespond = JSON.parse(data);
         if (filterRespond.block) post.style["display"] = "none";
       })
