@@ -9,20 +9,17 @@ opts.chainId =
   "0000000000000000000000000000000000000000000000000000000000000000";
 //connect to server which is connected to the network/production
 const client = new dsteem.Client("https://api.steemit.com");
-async function queryVotes(permalink, author) {
+async function queryVotes(permlink, author) {
   const query = {
     tag: "",
     limit: 1,
     start_author: author,
-    start_permlink: permalink,
+    start_permlink: permlink,
     truncate_body: 1
   };
-  let data = await client.database
-    .getDiscussions("trending", query)
-    .catch(err => {
-      console.log(err);
-    });
-  return data;
+  return await client.database.getDiscussions("trending", query).catch(err => {
+    console.log(err);
+  });
 }
 const user = ["bue", "nate-atkins"];
 http
@@ -37,7 +34,6 @@ http
       reqUrl = req.url.split("/").reverse();
       reqUrl[1] = reqUrl[1].substr(1);
     }
-
     let data;
     let end = JSON.stringify({ block: false });
     if (reqUrl) {
