@@ -25,7 +25,7 @@ function gotMessage(message, sender, sendresponse) {
   };
   let i = 0;
   for (post of posts) {
-    let res = filterAsk(postLink[i].href, post);
+    filterAsk(postLink[i].href, post);
     i++;
   }
 }
