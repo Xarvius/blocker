@@ -9,7 +9,7 @@ opts.chainId =
   "0000000000000000000000000000000000000000000000000000000000000000";
 //connect to server which is connected to the network/production
 const client = new dsteem.Client("https://api.steemit.com");
-function queryVotes(permalink, author) {
+async function queryVotes(permalink, author) {
   const query = {
     tag: "",
     limit: 1,
@@ -17,23 +17,19 @@ function queryVotes(permalink, author) {
     start_permlink: permalink,
     truncate_body: 1
   };
-  return client.database
-    .getDiscussions("trending", query)
 
-    .catch(err => {
-      console.log(err);
-      alert("Error occured, please reload the page");
-    });
+  let data = await client.database.getDiscussions("trending", query);
+  return data;
 }
 
 http
   .createServer((req, res) => {
     let reqUrl;
     if (req.url != "/favicon.ico") reqUrl = req.url.split("/").reverse(); //split url
-    reqUrl && // prevent favico
-      queryVotes(reqUrl[0], reqUrl[2]).then(data => {
-        console.log(data[0].active_votes); // voters list
-      });
+    let data;
+    reqUrl && (data = queryVotes(reqUrl[0], reqUrl[2])); // prevent favico
+
+    console.log(data); // <--------------------- PROMISE
     res.writeHead(200, { "Content-Type": "application/json" });
     const end = JSON.stringify({ block: true });
     res.end(end);
@@ -82,3 +78,10 @@ http
 //     });
 //     const JSONposts = JSON.stringify(arr);
 //     res.end(JSONposts);
+// return client.database
+//   .getDiscussions("trending", query)
+
+//   .catch(err => {
+//     console.log(err);
+//     alert("Error occured, please reload the page");
+//   });
