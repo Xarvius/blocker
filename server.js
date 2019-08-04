@@ -1,7 +1,7 @@
 const http = require("http");
 const port = process.env.PORT || 3000;
 const dsteem = require("dsteem");
-const blacklist = ["bue", "nate-atkins", "therising"];
+const blacklist = ["test"];
 const client = new dsteem.Client("https://api.steemit.com");
 async function queryVotes(permlink, author) {
   const query = {
@@ -25,7 +25,7 @@ async function dataCheck(reqUrl) {
   let data = await queryVotes(reqUrl[0], reqUrl[1]);
   let block =
     Array.isArray(data) && data.some(voter => blacklist.includes(voter));
-  let end = JSON.stringify({ block: !block });
+  let end = JSON.stringify({ block });
   return end;
 }
 
