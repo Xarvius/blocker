@@ -25,9 +25,7 @@ async function dataCheck(reqUrl) {
   let data = await queryVotes(reqUrl[0], reqUrl[1]);
   let block =
     Array.isArray(data) && data.some(voter => blacklist.includes(voter));
-  let end = block
-    ? JSON.stringify({ block: false })
-    : JSON.stringify({ block: true });
+  let end = JSON.stringify({ block: !block });
   return end;
 }
 
