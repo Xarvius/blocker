@@ -1,12 +1,12 @@
 function blockerRoutes(app, dsteem) {
-  const blacklist = ["theycallmedan"];
+  const blacklist = ["test"];
   const client = new dsteem.Client("https://api.steemit.com");
-  async function queryVotes(permlink, author) {
+  async function queryVotes(start_permlink, start_author) {
     const query = {
       tag: "",
       limit: 1,
-      start_author: author,
-      start_permlink: permlink,
+      start_author,
+      start_permlink,
       truncate_body: 1
     };
     return await client.database
