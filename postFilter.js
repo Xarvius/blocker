@@ -6,7 +6,7 @@ function gotMessage(message) {
   async function blockPosts(post) {
     let link = post.querySelector("h2.articles__h2 a").href;
     const API = `http://localhost:3000/${link}`;
-    let response = await fetch(API, { mode: "cors" });
+    let response = await fetch(API);
     let json = await response.json();
 
     if (json.block) {
