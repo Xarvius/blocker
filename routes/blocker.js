@@ -14,24 +14,32 @@ function blockerRoutes(app, dsteem) {
       .then(data => data[0].active_votes.map(list => list.voter))
       .catch(err => err);
   }
-  function urlSplit(url) {
-    let reqUrl = url.split("/").reverse();
-    reqUrl[1] = reqUrl[1].substr(1); //substr @
-    return reqUrl;
-  }
-  async function dataCheck(reqUrl) {
-    let data = await queryVotes(reqUrl[0], reqUrl[1]);
+  //   function urlSplit(url) {
+  //     let reqUrl = url.split("/").reverse();
+  //     reqUrl[1] = reqUrl[1].substr(1); //substr @
+  //     return reqUrl;
+  //   }
+  async function dataCheck(permlink, author) {
+    let data = await queryVotes(permlink, author);
     let block =
       Array.isArray(data) && data.some(voter => blacklist.includes(voter));
     return JSON.stringify({ block });
   }
-  app.get("/*", async (req, res) => {
+
+  app.get("/:permlink/:author", async (req, res) => {
     res.set("Content-Type", "application/json");
-    const link = req.params;
-    const reqUrl = urlSplit(link[0]);
-    const end = await dataCheck(reqUrl);
+    const { permlink, author } = req.params;
+    const end = await dataCheck(permlink, author);
 
     res.send(end);
   });
+  //   app.get("/*", async (req, res) => {
+  //     res.set("Content-Type", "application/json");
+  //     const link = req.params;
+  //     const reqUrl = urlSplit(link[0]);
+  //     const end = await dataCheck(reqUrl);
+
+  //     res.send(end);
+  //   });
 }
 module.exports = blockerRoutes;
