@@ -14,11 +14,7 @@ function blockerRoutes(app, dsteem) {
       .then(data => data[0].active_votes.map(list => list.voter))
       .catch(err => err);
   }
-  //   function urlSplit(url) {
-  //     let reqUrl = url.split("/").reverse();
-  //     reqUrl[1] = reqUrl[1].substr(1); //substr @
-  //     return reqUrl;
-  //   }
+
   async function dataCheck(permlink, author) {
     let data = await queryVotes(permlink, author);
     let block =
@@ -33,13 +29,5 @@ function blockerRoutes(app, dsteem) {
 
     res.send(end);
   });
-  //   app.get("/*", async (req, res) => {
-  //     res.set("Content-Type", "application/json");
-  //     const link = req.params;
-  //     const reqUrl = urlSplit(link[0]);
-  //     const end = await dataCheck(reqUrl);
-
-  //     res.send(end);
-  //   });
 }
 module.exports = blockerRoutes;
