@@ -1,8 +1,8 @@
-const http = require("http");
 const express = require("express");
 const cors = require("cors");
 const app = express();
 const dsteem = require("dsteem");
+
 const blacklist = ["theycallmedan"];
 const client = new dsteem.Client("https://api.steemit.com");
 async function queryVotes(permlink, author) {
@@ -30,17 +30,6 @@ async function dataCheck(reqUrl) {
   return JSON.stringify({ block });
 }
 
-// http
-//   .createServer(async (req, res) => {
-//     res.setHeader("Access-Control-Allow-Origin", "*");
-//     res.writeHead(200, { "Content-Type": "application/json" });
-
-//     const reqUrl = urlSplit(req.url);
-//     const end = await dataCheck(reqUrl);
-
-//     res.end(end);
-//   })
-//   .listen(process.env.PORT || 3000, "0.0.0.0");
 app.use(cors());
 app.listen(3000, "0.0.0.0", () => {
   console.log("Server up");
@@ -48,11 +37,7 @@ app.listen(3000, "0.0.0.0", () => {
 
 app.get("/*", async (req, res) => {
   res.set("Content-Type", "application/json");
-  //const { link } = req.params;
-  //const link = "https://steemit.com/threespeak/@nicholasmerten/zyzaqibt";
-
   const link = req.params;
-
   const reqUrl = urlSplit(link[0]);
   const end = await dataCheck(reqUrl);
 
